@@ -6,14 +6,29 @@ var express    = require('express'),
 
 // INDEX show all campgrounds
 router.get('/',(req,res)=>{
-    Campground.find({},function(err,allCampgrounds){
-        if(err){
-            console.log(err)
-        } else{
-            res.render('campgrounds/index',{campgrounds:allCampgrounds})
-        }
-    })
-    //res.render('campgrounds',{campgrounds:campgrounds})
+    var noMatch = null
+    if(req.query.search){
+        // there are several other ways and libraries to help us do this
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi')
+        Campground.find({name:regex},function(err,allCampgrounds){
+            if(err){
+                console.log(err)
+            } else{
+                if(allCampgrounds.length==0){
+                    noMatch="No campgrounds match that query, please try again."
+                }
+                res.render('campgrounds/index',{campgrounds:allCampgrounds,noMatch:noMatch})
+            }
+        })
+    }else{
+        Campground.find({},function(err,allCampgrounds){
+            if(err){
+                console.log(err)
+            } else{
+                res.render('campgrounds/index',{campgrounds:allCampgrounds,noMatch:noMatch})
+            }
+        })
+    }
 })
 
 // Create - add new campground to db
@@ -79,5 +94,9 @@ router.delete('/:id',middleware.checkCampgroundOwnership,(req,res)=>{
         }
     })
 })
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+}
 
 module.exports=router

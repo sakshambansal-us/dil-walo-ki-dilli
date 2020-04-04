@@ -12,6 +12,19 @@
     </header>
 
     <div class="row text-center d-flex flex-wrap">
+        <div class="col-md-12">
+            <% if(noMatch !== null){ %>
+                <h3><%= noMatch %></h3>
+                <p>
+                    <form action="/campgrounds" method="GET" class="form-inline justify-content-center">
+                        <div class="form-group">
+                            <input type=text name="search" placeholder="Campground search..." class="form-control">
+                            <input type="submit" value="Search" class="btn btn-secondary">
+                        </div>
+                    </form>
+                </p>
+            <% } %>
+        </div>
         <% campgrounds.forEach((campground) => { %>
         <div class="col-md-3 col-sm-6">
             <div class="card">

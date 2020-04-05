@@ -11,7 +11,7 @@
         </div>
     </header>
 
-    <div class="row text-center d-flex flex-wrap">
+    <div class="row text-center">
         <div class="col-md-12">
             <% if(noMatch !== null){ %>
                 <h3><%= noMatch %></h3>
@@ -26,7 +26,7 @@
             <% } %>
         </div>
         <% campgrounds.forEach((campground) => { %>
-        <div class="col-md-3 col-sm-6">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
                 <img src=" <%= campground.image %> " style="max-height: 18rem;">
                 <div class="card-body">

@@ -34,14 +34,13 @@ router.get('/',(req,res)=>{
 // Create - add new campground to db
 router.post('/',middleware.isLoggedIn,(req,res) => {
     var name=req.body.name
-    var price= req.body.price
     var image=req.body.image
     var desc=req.body.description
     var author={
         id:req.user._id,
         username:req.user.username
     }
-    var newCampground={name:name,price:price,image:image,description:desc,author:author}
+    var newCampground={name:name,image:image,description:desc,author:author}
     Campground.create(newCampground,function(err,newlyCreated){
         if(err){
             console.log(err)
@@ -59,8 +58,9 @@ router.get('/new',middleware.isLoggedIn,(req,res) => {
 // show - shows more info about campground
 router.get("/:id",function(req,res){
     Campground.findById(req.params.id).populate('comments').exec(function(err,foundCampground){
-        if(err){
-            console.log(err)
+        if(err || !foundCampground){
+            req.flash('error','Campground not found')
+            res.redirect('back')
         } else{
             res.render('campgrounds/show',{campground:foundCampground})
         }
@@ -86,11 +86,20 @@ router.put('/:id',middleware.checkCampgroundOwnership,(req,res)=>{
 
 // DESTROY CAMPGROUND ROUTE
 router.delete('/:id',middleware.checkCampgroundOwnership,(req,res)=>{
-    Campground.findByIdAndRemove(req.params.id,function(err){
+    Campground.findByIdAndRemove(req.params.id,function(err,removedCampground){
         if(err){
+            req.flash('error','Campground not removed')
             res.redirect('/campgrounds')
         }else{
-            res.redirect('/campgrounds')
+            Comment.deleteMany( {_id: { $in: removedCampground.comments } }, (err) => {
+                if (err) {
+                    req.flash('error','Comments not removed')
+                    res.redirect('/campgrounds')
+                }else{
+                    req.flash('error','Campground deleted')
+                    res.redirect('/campgrounds')
+                }
+            })
         }
     })
 })

@@ -4,32 +4,52 @@ var express    = require('express'),
     Comment    = require('../models/comment'),
     middleware = require('../middleware')
 
-// INDEX show all places
-router.get('/',(req,res)=>{
-    var noMatch = null
-    if(req.query.search){
-        // there are several other ways and libraries to help us do this
-        const regex = new RegExp(escapeRegex(req.query.search), 'gi')
-        Place.find({name:regex},function(err,allPlaces){
-            if(err){
-                console.log(err)
-            } else{
-                if(allPlaces.length==0){
-                    noMatch="No places match that query, please try again."
+//INDEX - show all places
+router.get("/", function(req, res){
+    var perPage = 8;
+    var pageQuery = parseInt(req.query.page);
+    var pageNumber = pageQuery ? pageQuery : 1;
+    var noMatch = null;
+    if(req.query.search) {
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Place.find({name: regex}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allPlaces) {
+            Place.countDocuments({name: regex}).exec(function (err, count) {
+                if (err) {
+                    console.log(err);
+                    res.redirect("back");
+                } else {
+                    if(allPlaces.length < 1) {
+                        noMatch = "No places match that query, please try again.";
+                    }
+                    res.render("places/index", {
+                        places: allPlaces,
+                        current: pageNumber,
+                        pages: Math.ceil(count / perPage),
+                        noMatch: noMatch,
+                        search: req.query.search
+                    });
                 }
-                res.render('places/index',{places:allPlaces,noMatch:noMatch})
-            }
-        })
-    }else{
-        Place.find({},function(err,allPlaces){
-            if(err){
-                console.log(err)
-            } else{
-                res.render('places/index',{places:allPlaces,noMatch:noMatch})
-            }
-        })
+            });
+        });
+    } else {
+        // get all places from DB
+        Place.find({}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allPlaces) {
+            Place.countDocuments().exec(function (err, count) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("places/index", {
+                        places: allPlaces,
+                        current: pageNumber,
+                        pages: Math.ceil(count / perPage),
+                        noMatch: noMatch,
+                        search: false
+                    });
+                }
+            });
+        });
     }
-})
+});
 
 // Create - add new place to db
 router.post('/',middleware.isLoggedIn,(req,res) => {

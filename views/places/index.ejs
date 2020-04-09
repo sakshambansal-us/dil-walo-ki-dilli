@@ -3,10 +3,10 @@
 <div class="container">
     <header class="jumbotron">
         <div class="container">
-            <h1>Welcome to YelpCamp!</h1>
-            <p>View our hand-picked campgrounds from all over the world!</p>
+            <h1>Welcome to Delhi!</h1>
+            <p>View our hand-picked places from all over delhi!</p>
             <p>
-                <a class="btn btn-primary" href="/campgrounds/new">Add New Campground</a>
+                <a class="btn btn-primary" href="/places/new">Add New Place</a>
             </p>
         </div>
     </header>
@@ -16,24 +16,24 @@
             <% if(noMatch !== null){ %>
                 <h3><%= noMatch %></h3>
                 <p>
-                    <form action="/campgrounds" method="GET" class="form-inline justify-content-center">
+                    <form action="/places" method="GET" class="form-inline justify-content-center">
                         <div class="form-group">
-                            <input type=text name="search" placeholder="Campground search..." class="form-control">
+                            <input type=text name="search" placeholder="Place search..." class="form-control">
                             <input type="submit" value="Search" class="btn btn-secondary">
                         </div>
                     </form>
                 </p>
             <% } %>
         </div>
-        <% campgrounds.forEach((campground) => { %>
+        <% places.forEach((place) => { %>
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
-                <img src=" <%= campground.image %> " style="max-height: 18rem;">
+                <img src=" <%= place.image %> " style="max-height: 18rem;">
                 <div class="card-body">
-                    <h4 class="card-title"><%= campground.name %></h4>
+                    <h4 class="card-title"><%= place.name %></h4>
                 </div>
                 <p>
-                    <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">More info</a>
+                    <a href="/places/<%= place._id %>" class="btn btn-primary">More info</a>
                 </p>
             </div>
         </div>

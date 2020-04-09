@@ -22,8 +22,8 @@ router.post('/register',(req,res)=>{
             return res.redirect('/register')
         }
         passport.authenticate('local')(req,res,function(){
-            req.flash('success','Welcome to YelpCamp'+ user.username)
-            res.redirect('/campgrounds')
+            req.flash('success','Welcome to Delhi'+ user.username)
+            res.redirect('/places')
         })
     })
 })
@@ -36,10 +36,10 @@ router.get('/login',(req,res)=>{
 // handling login logic
 router.post('/login', passport.authenticate('local',
     {
-        successRedirect:'/campgrounds',
+        successRedirect:'/places',
         failureRedirect:'/login',
         failureFlash: true,
-        successFlash: 'Welcome to YelpCamp!'
+        successFlash: 'Welcome to Delhi!'
     }) , (req,res)=>{
 
 })
@@ -48,7 +48,7 @@ router.post('/login', passport.authenticate('local',
 router.get('/logout',(req,res)=>{
     req.logout()
     req.flash('success','Logged you out!')
-    res.redirect('/campgrounds')
+    res.redirect('/places')
 })
 
 module.exports=router

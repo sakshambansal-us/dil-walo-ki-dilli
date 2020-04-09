@@ -7,17 +7,17 @@
         </div>
         <div class="col-md-9">
             <div class="card mb-3">
-                <img class="card-img-top" src="<%= campground.image %>">
+                <img class="card-img-top" src="<%= place.image %>">
                 <div class="card-body">
-                    <h5 class="card-title"><%= campground.name %></h5>
+                    <h5 class="card-title"><%= place.name %></h5>
                     <p>
-                        <em>Submitted By <%= campground.author.username %></em>
+                        <em>Submitted By <%= place.author.username %></em>
                     </p>
                     <hr>
-                    <p class="card-text"><%= campground.description %></p>
-                    <% if(currentUser && campground.author.id.equals(currentUser._id)){ %>
-                        <a class="btn btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
-                        <form class="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+                    <p class="card-text"><%= place.description %></p>
+                    <% if(currentUser && place.author.id.equals(currentUser._id)){ %>
+                        <a class="btn btn-warning" href="/places/<%= place._id %>/edit">Edit</a>
+                        <form class="delete-form" action="/places/<%= place._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-danger">Delete</button>
                         </form>
                     <% } %>
@@ -26,12 +26,12 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text-right">
-                        <a class="card-link btn btn-success" href="/campgrounds/<%=  campground._id%>/comments/new">
+                        <a class="card-link btn btn-success" href="/places/<%=  place._id%>/comments/new">
                             Add New Comment
                         </a>
                     </div>
                     <hr>
-                        <% campground.comments.forEach(function(comment){ %>
+                        <% place.comments.forEach(function(comment){ %>
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="card">
@@ -44,11 +44,11 @@
                                                 <p class>10 days ago</p>
                                                 <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
                                                     <a class="btn btn-sm btn-warning"
-                                                        href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit">
+                                                        href="/places/<%= place._id %>/comments/<%= comment._id %>/edit">
                                                         Edit
                                                     </a>
                                                     <form class="delete-form"
-                                                        action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=DELETE"
+                                                        action="/places/<%= place._id %>/comments/<%= comment._id %>?_method=DELETE"
                                                         method="POST">
                                                         <input type="submit" class="btn btn-sm btn-danger" value="Delete">
                                                     </form>
